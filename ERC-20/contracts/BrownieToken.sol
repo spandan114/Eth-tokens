@@ -35,8 +35,18 @@ contract BrownieToken {
        return true;
     }
 
-    // function transferFrom(address sender, address recipient, uint256 amount) external returns (bool){
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool){
 
-    // }
+        require(amount <= balanceOf[sender],'Account balance low');
+        //Check sender must have enough amount of token in allowence to transfer
+        require(amount <= allowance[sender][msg.sender],'Allowance balance low');
+        //Update allowence
+        allowance[sender][msg.sender] -= amount;
+        balanceOf[sender] -= amount;
+        balanceOf[recipient] += amount;
+        //Emit event
+        emit Transfer(sender,recipient,amount);
+        return true;
+    }
 
 }
