@@ -38,10 +38,23 @@ contract('BrownieToken', async(accounts) => {
     assert.equal(transferBrownie.receipt.logs[0].event, 'Transfer', 'should be the "Transfer" event');
     assert.equal(transferBrownie.receipt.logs[0].args.from, accounts[0], 'logs the account the tokens are transferred from');
     assert.equal(transferBrownie.receipt.logs[0].args.to, accounts[1], 'logs the account the tokens are transferred to');
-
     assert.equal(transferBrownie.receipt.logs[0].args.value.toNumber(), 1500, 'logs the transfer amount');
+
     assert.equal(await instance.balanceOf(accounts[1]), 1500,"Balance not received");
     assert.equal(await instance.balanceOf(accounts[0]),98500,"Balance not transferer");
   });
+
+
+  it("Approve token for delighted transfer", async ()=> {
+    const delegateBrownie = await instance.approve(accounts[1],1000,{from:accounts[0]})
+    //Check emitted event data is correct or not
+    assert.equal(delegateBrownie.receipt.logs.length, 1, 'triggers one event');
+    assert.equal(delegateBrownie.receipt.logs[0].event, 'Approval', 'should be the "Approval" event');
+    assert.equal(delegateBrownie.receipt.logs[0].args.owner, accounts[0], 'logs the account the tokens are delighted from');
+    assert.equal(delegateBrownie.receipt.logs[0].args.spender, accounts[1], 'logs the account the tokens are delighted to');
+    assert.equal(delegateBrownie.receipt.logs[0].args.value.toNumber(), 1000, 'logs the transfer amount');
+    const delegatedAmount = await instance.allowance(accounts[0],accounts[1]);
+    assert.equal(delegatedAmount.toNumber(), 1000, 'Delegated amount must be 1000');
+  })
 
 });

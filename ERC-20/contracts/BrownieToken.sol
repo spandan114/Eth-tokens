@@ -7,19 +7,15 @@ contract BrownieToken {
     string public name = "BrownieToken";
     string public symbol = "BT";
     mapping(address=>uint256) public balanceOf;
-
+    mapping(address=>mapping(address=>uint256)) public allowance;
 
     event Transfer(address from, address to, uint256 value);
-    // event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(address owner, address spender, uint256 value);
 
     constructor() {
         balanceOf[msg.sender] = 100000;
         totalSupply_ = 100000;
     }
-
-    // function allowance(address owner, address spender) external view returns (uint256){
-
-    // }
 
     function transfer(address to, uint256 amount) external returns (bool){
         //Exception if account doesnt exist
@@ -33,9 +29,11 @@ contract BrownieToken {
         return true;
     }
 
-    // function approve(address spender, uint256 amount) external returns (bool){
-
-    // }
+    function approve(address spender, uint256 amount) external returns (bool){
+       allowance[msg.sender][spender] = amount;
+       emit Approval(msg.sender,spender,amount);
+       return true;
+    }
 
     // function transferFrom(address sender, address recipient, uint256 amount) external returns (bool){
 
