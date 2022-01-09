@@ -30,11 +30,18 @@ contract('BrownieToken', async(accounts) => {
   });
 
   it("Transfer token", async ()=> {
-    await expect(instance.transfer.call(accounts[1],9999999999)).to.be.revertedWith("You dont have enough tokens")
-    await instance.transfer.call(accounts[1],1500,{from:accounts[0]})
+   // await expect(await instance.transfer(accounts[1],9999999999)).to.be.rejectedWith("You dont have enough tokens")
+    const transferBrownie =  await instance.transfer(accounts[1],1500,{from:accounts[0]})
+    //Check emitted event data is correct or not
+    // console.log(transferBrownie.receipt.logs)
+    assert.equal(transferBrownie.receipt.logs.length, 1, 'triggers one event');
+    assert.equal(transferBrownie.receipt.logs[0].event, 'Transfer', 'should be the "Transfer" event');
+    assert.equal(transferBrownie.receipt.logs[0].args.from, accounts[0], 'logs the account the tokens are transferred from');
+    assert.equal(transferBrownie.receipt.logs[0].args.to, accounts[1], 'logs the account the tokens are transferred to');
+
+    assert.equal(transferBrownie.receipt.logs[0].args.value.toNumber(), 1500, 'logs the transfer amount');
     assert.equal(await instance.balanceOf(accounts[1]), 1500,"Balance not received");
-    const ownerBalance = await instance.balanceOf(accounts[0])
-    assert.equal(await instance.balanceOf(accounts[0]),ownerBalance-1500,"Balance not transferer");
+    assert.equal(await instance.balanceOf(accounts[0]),98500,"Balance not transferer");
   });
 
 });
