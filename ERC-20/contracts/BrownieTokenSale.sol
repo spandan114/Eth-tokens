@@ -32,4 +32,15 @@ contract BrownieTokenSale {
         //emit sell event
         emit Sell(msg.sender,_noOfToken);
      }
+
+    function endToken() public {
+        //Only admin can end the sell
+        require(msg.sender == admin,"Only admin can and the sell");
+        //Return remaining token to admin
+        uint remainingToken = tokenContract.balanceOf(address(this));
+        tokenContract.transfer(admin, remainingToken);
+        //Destroy contract
+        selfdestruct(payable(admin));
+    }
+
 }  
