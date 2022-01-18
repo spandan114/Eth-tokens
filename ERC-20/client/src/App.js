@@ -1,11 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import { loadBlockchainData, loadWeb3 } from "./utils/web3Connector";
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    const load = async () => {
+      await loadWeb3();
+      const contractData = await loadBlockchainData();
+      console.log(contractData);
+    };
+    load();
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -20,6 +29,6 @@ function App() {
       </header>
     </div>
   );
-}
+};
 
 export default App;
