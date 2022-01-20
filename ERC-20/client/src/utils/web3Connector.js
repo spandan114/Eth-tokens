@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import BrownieTokenSale from '../build/contracts/BrownieTokenSale.json';
+import BrownieToken from '../build/contracts/BrownieToken.json';
 
 export const loadWeb3 = async () => {
     //connect web3 with http provider
@@ -24,17 +25,30 @@ export const loadWeb3 = async () => {
     const networkId = await web3.eth.net.getId();
     //get network id details from abi
     const tokenSale = BrownieTokenSale.networks[networkId];
-    if (tokenSale) {
+    const token = BrownieToken.networks[networkId];
+    if (token && tokenSale) {
       //connect smart contract with web3
       
-      const token = new web3.eth.Contract(
+      const _tokenSale = new web3.eth.Contract(
         BrownieTokenSale.abi,
         tokenSale.address
       );
+
+      const _token = new web3.eth.Contract(
+        BrownieToken.abi,
+        token.address
+      );
+
+      const tokenPrice = await _tokenSale.methods.tokenPrice().call();
+      const tokenPriceInETH = web3.utils.fromWei(tokenPrice, 'ether')
       
+    //  console.log(await _token.methods.balanceOf(account).call())
+
       return {
-          token,
-          account
+          saleToken:_tokenSale,
+          brownie:_token,
+          account,
+          tokenPrice:tokenPriceInETH
         };
 
     } else {
