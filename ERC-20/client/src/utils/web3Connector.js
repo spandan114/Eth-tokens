@@ -41,8 +41,19 @@ export const loadWeb3 = async () => {
 
       const tokenPrice = await _tokenSale.methods.tokenPrice().call();
       const tokenPriceInETH = web3.utils.fromWei(tokenPrice, 'ether')
+
+      //Transfer tokens from admin to smat contract
+      // await _token.methods.transfer(tokenSale.address,75000)
+      // .send({ from: account })
+      // .on('transactionHash', function(hash){
+      //    console.log(hash)
+      //  })
+
+      //console.log(tokenSale.address)
       
-    //  console.log(await _token.methods.balanceOf(account).call())
+      // console.log(await _token.methods.balanceOf(tokenSale.address).call())
+
+
 
       return {
           saleToken:_tokenSale,

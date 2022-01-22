@@ -4,6 +4,7 @@ import { loadBlockchainData, loadWeb3 } from "./utils/web3Connector";
 
 const App = () => {
   const [account, setAccount] = useState(null);
+  const [tokenAmount, setTokenAmount] = useState(0);
   const [tokenOwned, setTokenOwned] = useState(0);
   const [contract, setContract] = useState(null);
   const [tokenPrice, setTokenPrice] = useState(null);
@@ -25,6 +26,24 @@ const App = () => {
     load();
   }, []);
 
+  const purchesBrownie = async() =>{
+    const web3 = window.web3;
+    
+    const receipt = await contract.methods.buyToken(tokenAmount)
+    .send({
+      from:account,
+      value:web3.utils.toBN(web3.utils.toWei((tokenPrice*tokenAmount).toString(), 'ether'))
+    })
+    .on('transactionHash', function(hash){
+         console.log(hash)
+     })
+     .on('error', function(error){ 
+       console.log(error)
+     })
+
+     console.log(receipt.events.Sell)
+
+  }
 
   return (
     <div className="App">
@@ -39,12 +58,15 @@ const App = () => {
                 type="text"
                 className="form-control"
                 placeholder="Buy brownie token ."
+                value={tokenAmount}
+                onChange={e=>setTokenAmount(e.target.value)}
               />
               <div className="input-group-append">
                 <button
                   className="btn bg-success"
                   type="button"
                   id="button-addon2"
+                  onClick={()=>purchesBrownie()}
                 >
                   Buy tokens
                 </button>
