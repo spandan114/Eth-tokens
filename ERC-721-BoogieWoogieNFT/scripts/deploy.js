@@ -12,10 +12,15 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+  const [deployer] = await ethers.getSigners();
+
+  console.log(`Deploying contracts with the account: ${deployer.address}`);
+  console.log(`Account balance: ${(await deployer.getBalance()).toString()}`);
+
 
   // We get the contract to deploy
-  const MintNft = await hre.ethers.getContractFactory("MintNft");
-  const mint = await MintNft.deploy("Hello, Hardhat!");
+  const MintNft = await hre.ethers.getContractFactory("BoogieWoogie");
+  const mint = await MintNft.deploy();
 
   await mint.deployed();
 

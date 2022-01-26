@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -15,10 +15,6 @@ contract BoogieWoogie is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     constructor() ERC721("Boogie Woogie", "BW") {}
-
-    function _baseURI() internal pure override returns (string memory) {
-        return "https://abcd.com";
-    }
 
     function safeMint(address to, string memory uri) public payable {
         require(totalSupply() < MAX_LIMIT,"Can't mint more");
